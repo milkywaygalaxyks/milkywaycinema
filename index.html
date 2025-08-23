@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Movie Website</title>
+  <style>
+    body { margin: 0; font-family: Arial; background: #111; color: white; }
+    header { background: #e50914; padding: 20px; font-size: 24px; font-weight: bold; text-align: center; }
+    .movie-container { display: flex; flex-wrap: wrap; justify-content: center; padding: 20px; }
+    .movie-card { margin: 10px; background: #222; border-radius: 8px; overflow: hidden; width: 180px; cursor: pointer; }
+    .movie-card img { width: 100%; height: 270px; object-fit: cover; }
+    .movie-card h3 { margin: 0; padding: 10px; font-size: 16px; }
+  </style>
+</head>
+<body>
+  <header>🎬 My Movie Website</header>
+
+  <div class="movie-container" id="movieContainer"></div>
+
+  <!-- Paste your script here -->
+  <script>
+    // function to convert Google Drive sharing link → direct link
+    function convertDriveLink(link) {
+      const match = link.match(/\/d\/(.+?)\//);
+      return match ? `https://drive.google.com/uc?export=download&id=${match[1]}` : link;
+    }
+
+    const movies = [
+      {
+        id: 1,
+        title: "Movie 1",
+        poster: "posters/poster1.jpg",
+        video: convertDriveLink("https://drive.google.com/file/d/1AbCdEfGhIjKlMnOp/view?usp=sharing")
+      },
+      {
+        id: 2,
+        title: "Movie 2",
+        poster: "posters/poster2.jpg",
+        video: convertDriveLink("https://drive.google.com/file/d/2XyZtUvWqRsTyAbCdEfGh/view?usp=sharing")
+      }
+    ];
+
+    // save movies so movie.html can use them
+    localStorage.setItem("movies", JSON.stringify(movies));
+
+    // display movies on homepage
+    const container = document.getElementById("movieContainer");
+    movies.forEach(movie => {
+      const card = document.createElement("div");
+      card.className = "movie-card";
+      card.innerHTML = `
+        <img src="${movie.poster}" alt="${movie.title}">
+        <h3>${movie.title}</h3>
+      `;
+      card.onclick = () => {
+        window.location.href = `movie.html?id=${movie.id}`;
+      };
+      container.appendChild(card);
+    });
+  </script>
+</body>
+</html>

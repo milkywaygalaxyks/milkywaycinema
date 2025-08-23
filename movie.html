@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Movie Player</title>
+  <style>
+    body { margin: 0; font-family: Arial; background: #111; color: white; text-align: center; }
+    header { background: #e50914; padding: 15px; font-size: 20px; font-weight: bold; }
+    .movie-container { padding: 20px; }
+    video { width: 90%; max-width: 900px; height: auto; border-radius: 10px; margin-top: 20px; }
+    img { width: 200px; border-radius: 8px; margin-top: 10px; }
+    a { color: #e50914; text-decoration: none; display: inline-block; margin-top: 15px; }
+  </style>
+</head>
+<body>
+  <header>🎬 Movie Player</header>
+
+  <div class="movie-container" id="movieContainer"></div>
+
+  <script>
+    // Get movie ID from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const movieId = parseInt(urlParams.get("id"));
+
+    // Get movies from localStorage
+    const movies = JSON.parse(localStorage.getItem("movies")) || [];
+
+    // Find the selected movie
+    const movie = movies.find(m => m.id === movieId);
+
+    const container = document.getElementById("movieContainer");
+
+    if (movie) {
+      container.innerHTML = `
+        <h2>${movie.title}</h2>
+        <img src="${movie.poster}" alt="${movie.title}">
+        <video controls autoplay>
+          <source src="${movie.video}" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <br>
+        <a href="index.html">⬅ Back to Home</a>
+      `;
+    } else {
+      container.innerHTML = `<p>Movie not found!</p><a href="index.html">⬅ Back to Home</a>`;
+    }
+  </script>
+</body>
+</html>
