@@ -5,20 +5,68 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Movie Website</title>
   <style>
-    body { margin: 0; font-family: Arial; background: #111; color: white; }
-    header { background: #e50914; padding: 20px; font-size: 24px; font-weight: bold; text-align: center; }
+    body { margin: 0; font-family: Arial; background: #0d1b1e; color: white; }
+    header { background: #20c997; padding: 20px; font-size: 24px; font-weight: bold; text-align: center; }
+    
+    /* Search bar styling */
+    .search-container {
+      text-align: center;
+      margin: 20px;
+    }
+    .search-container input {
+      width: 60%;
+      max-width: 400px;
+      padding: 10px;
+      border-radius: 25px;
+      border: none;
+      font-size: 16px;
+      outline: none;
+      background: #122426;
+      color: white;
+      border: 2px solid #20c997;
+    }
+
+    .search-container input::placeholder {
+      color: #aaa;
+    }
+
     .movie-container { display: flex; flex-wrap: wrap; justify-content: center; padding: 20px; }
-    .movie-card { margin: 10px; background: #222; border-radius: 8px; overflow: hidden; width: 180px; cursor: pointer; }
-    .movie-card img { width: 100%; height: 270px; object-fit: cover; }
-    .movie-card h3 { margin: 0; padding: 10px; font-size: 16px; }
+    .movie-card { 
+      margin: 15px; 
+      background: #122426; 
+      border-radius: 10px; 
+      overflow: hidden; 
+      width: 200px; 
+      cursor: pointer; 
+      transition: transform 0.3s ease, box-shadow 0.3s ease; 
+      text-align: center;
+      border: 1px solid #20c997;
+    }
+    .movie-card:hover { 
+      transform: scale(1.08); 
+      box-shadow: 0 8px 20px rgba(32,201,151,0.5); 
+    }
+    .movie-card img { width: 100%; height: 280px; object-fit: cover; }
+    .movie-card h3 { 
+      margin: 0; 
+      padding: 12px; 
+      font-size: 16px; 
+      background: #20c997; 
+      color: white; 
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
-  <header>🎬 Milkyway cinema</header>
+  <header>🎬 Milkyway Cinema</header>
+
+  <!-- Search bar -->
+  <div class="search-container">
+    <input type="text" id="searchInput" placeholder="🔍 Search for a movie...">
+  </div>
 
   <div class="movie-container" id="movieContainer"></div>
 
-  <!-- Paste your script here -->
   <script>
     // function to convert Google Drive sharing link → direct link
     function convertDriveLink(link) {
@@ -29,13 +77,13 @@
     const movies = [
       {
         id: 1,
-        title: "Mahavatar Narsimha(2025)",
+        title: "Mahavatar Narsimha (2025)",
         poster: "posters/poster1.jpg",
         video: convertDriveLink("https://drive.google.com/file/d/1nV9TCnYVA4M9JqzxX2mM2sgfQlDV6R2o/view?usp=sharing")
       },
       {
         id: 2,
-        title: "Kudumbasthan(2025)",
+        title: "Kudumbasthan (2025)",
         poster: "posters/poster2.jpg",
         video: convertDriveLink("https://drive.google.com/file/d/1P-UPst7OvSKGkdDTNIAAUpCQsxg71i12/view?usp=sharing")
       }
@@ -44,19 +92,34 @@
     // save movies so movie.html can use them
     localStorage.setItem("movies", JSON.stringify(movies));
 
-    // display movies on homepage
     const container = document.getElementById("movieContainer");
-    movies.forEach(movie => {
-      const card = document.createElement("div");
-      card.className = "movie-card";
-      card.innerHTML = `
-        <img src="${movie.poster}" alt="${movie.title}">
-        <h3>${movie.title}</h3>
-      `;
-      card.onclick = () => {
-        window.location.href = `movie.html?id=${movie.id}`;
-      };
-      container.appendChild(card);
+    const searchInput = document.getElementById("searchInput");
+
+    // Function to display movies
+    function displayMovies(filter = "") {
+      container.innerHTML = "";
+      movies
+        .filter(movie => movie.title.toLowerCase().includes(filter.toLowerCase()))
+        .forEach(movie => {
+          const card = document.createElement("div");
+          card.className = "movie-card";
+          card.innerHTML = `
+            <img src="${movie.poster}" alt="${movie.title}">
+            <h3>${movie.title}</h3>
+          `;
+          card.onclick = () => {
+            window.location.href = `movie.html?id=${movie.id}`;
+          };
+          container.appendChild(card);
+        });
+    }
+
+    // Initial load
+    displayMovies();
+
+    // Search filter
+    searchInput.addEventListener("input", (e) => {
+      displayMovies(e.target.value);
     });
   </script>
 </body>
