@@ -19,6 +19,7 @@
       font-size: 24px;
       font-weight: bold;
       text-align: center;
+      text-shadow: 0 0 12px #20c997, 0 0 24px #17a589;
     }
 
     .search-container {
@@ -116,17 +117,22 @@
       return match ? `https://drive.google.com/file/d/${match[1]}/preview` : link;
     }
 
+    function convertImageLink(link) {
+      const match = link.match(/\/d\/(.+?)\//);
+      return match ? `https://drive.google.com/uc?export=view&id=${match[1]}` : link;
+    }
+
     const movies = [
       {
         id: 1,
         title: "Mahavatar Narsimha (2025)",
-        poster: "https://drive.google.com/uc?export=view&id=1nV9TCnYVA4M9JqzxX2mM2sgfQlDV6R2o",
+        poster: convertImageLink("https://drive.google.com/file/d/1nV9TCnYVA4M9JqzxX2mM2sgfQlDV6R2o/view?usp=sharing"),
         video: convertDriveLink("https://drive.google.com/file/d/1nV9TCnYVA4M9JqzxX2mM2sgfQlDV6R2o/view?usp=sharing")
       },
       {
         id: 2,
         title: "Kudumbasthan (2025)",
-        poster: "https://drive.google.com/uc?export=view&id=1P-UPst7OvSKGkdDTNIAAUpCQsxg71i12",
+        poster: convertImageLink("https://drive.google.com/file/d/1P-UPst7OvSKGkdDTNIAAUpCQsxg71i12/view?usp=sharing"),
         video: convertDriveLink("https://drive.google.com/file/d/1P-UPst7OvSKGkdDTNIAAUpCQsxg71i12/view?usp=sharing")
       }
     ];
@@ -172,4 +178,3 @@
   </script>
 </body>
 </html>
-
