@@ -188,25 +188,22 @@
       return match ? `https://drive.google.com/file/d/${match[1]}/preview` : link;
     }
 
-    function convertImageLink(link) {
-      const match = link.match(/\/d\/(.+?)\//);
-      return match ? `https://drive.google.com/uc?export=view&id=${match[1]}` : link;
-    }
 
-    const movies = [
-      {
-        id: 1,
-        title: "Mahavatar Narsimha (2025)",
-        poster: convertImageLink("https://drive.google.com/file/d/1nV9TCnYVA4M9JqzxX2mM2sgfQlDV6R2o/view?usp=sharing"),
-        video: convertDriveLink("https://drive.google.com/file/d/1nV9TCnYVA4M9JqzxX2mM2sgfQlDV6R2o/view?usp=sharing")
-      },
-      {
-        id: 2,
-        title: "Kudumbasthan (2025)",
-        poster: convertImageLink("https://drive.google.com/file/d/1P-UPst7OvSKGkdDTNIAAUpCQsxg71i12/view?usp=sharing"),
-        video: convertDriveLink("https://drive.google.com/file/d/1P-UPst7OvSKGkdDTNIAAUpCQsxg71i12/view?usp=sharing")
-      }
-    ];
+const movies = [
+  {
+    id: 1,
+    title: "Mahavatar Narsimha (2025)",
+    poster: "Posters/Poster1.jpg",
+    video: convertDriveLink("https://drive.google.com/file/d/1nV9TCnYVA4M9JqzxX2mM2sgfQlDV6R2o/view?usp=sharing")
+  },
+  {
+    id: 2,
+    title: "Kudumbasthan (2025)",
+    poster: "Posters/Poster2.jpg",
+    video: convertDriveLink("https://drive.google.com/file/d/1P-UPst7OvSKGkdDTNIAAUpCQsxg71i12/view?usp=sharing")
+  }
+];
+
 
     localStorage.setItem("movies", JSON.stringify(movies));
 
