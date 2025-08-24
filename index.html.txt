@@ -13,6 +13,71 @@
       cursor: none;
     }
 
+    /* 🌌 Welcome Screen */
+    .welcome-screen {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: #0d1b1e;
+      z-index: 9999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      animation: fadeOut 2s ease forwards;
+      animation-delay: 3s;
+      overflow: hidden;
+    }
+
+    .welcome-screen::before {
+      content: "";
+      position: absolute;
+      width: 100%; height: 100%;
+      background: url('https://www.transparenttextures.com/patterns/stardust.png');
+      opacity: 0.2;
+      animation: twinkle 3s infinite ease-in-out;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.2; }
+      50% { opacity: 0.4; }
+    }
+
+    .welcome-text {
+      font-size: 32px;
+      font-weight: bold;
+      color: white;
+      text-shadow: 0 0 12px #20c997, 0 0 24px #17a589;
+      animation: pulseText 2s infinite ease-in-out;
+      z-index: 1;
+    }
+
+    @keyframes pulseText {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.05); }
+    }
+
+    .spinner {
+      width: 80px;
+      height: 80px;
+      border: 6px solid #fff;
+      border-top: 6px solid #20c997;
+      border-radius: 50%;
+      animation: spin 2s linear infinite;
+      box-shadow: 0 0 20px #20c997;
+      margin-top: 20px;
+      z-index: 1;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes fadeOut {
+      to { opacity: 0; visibility: hidden; }
+    }
+
     header {
       background: #20c997;
       padding: 20px;
@@ -102,6 +167,12 @@
   </style>
 </head>
 <body>
+  <!-- 🌌 Welcome Screen -->
+  <div class="welcome-screen">
+    <div class="welcome-text">Welcome to Milkyway Cinema</div>
+    <div class="spinner"></div>
+  </div>
+
   <header>🎬 Milkyway Cinema</header>
 
   <div class="search-container">
@@ -178,3 +249,4 @@
   </script>
 </body>
 </html>
+
