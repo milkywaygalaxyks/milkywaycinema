@@ -190,10 +190,13 @@
       return match ? `https://drive.google.com/file/d/${match[1]}/preview` : driveLink;
     }
 
+    function getImageLink(driveLink) {
+      const match = driveLink.match(/\/d\/(.+?)\//);
+      return match ? `https://drive.google.com/uc?export=view&id=${match[1]}` : driveLink;
+    }
+
     // 🌠 Play intro sound
-    introSound.play().catch(() => {
-      // Autoplay might be blocked—no worries!
-    });
+    introSound.play().catch(() => {});
 
     // 🌌 Hide intro overlay and fade sound
     setTimeout(() => {
@@ -204,7 +207,7 @@
       if (movie) {
         container.innerHTML = `
           <h2>${movie.title}</h2>
-          <img src="${movie.poster}" alt="${movie.title}">
+          <img src="${getImageLink(movie.poster)}" alt="${movie.title}">
           <iframe src="${getPreviewLink(movie.video)}" allow="autoplay"></iframe>
           <br>
           <a href="index.html" class="back-btn">⬅ Back to Home</a>
