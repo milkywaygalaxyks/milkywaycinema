@@ -5,16 +5,67 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Movie Player</title>
   <style>
-    body { margin: 0; font-family: Arial; background: #111; color: white; text-align: center; }
-    header { background: #e50914; padding: 15px; font-size: 20px; font-weight: bold; }
+    body { margin: 0; font-family: Arial; background: #0d1b1e; color: white; text-align: center; }
+    
+    /* Header with Glow */
+    header { 
+      background: #20c997; 
+      padding: 15px; 
+      font-size: 26px; 
+      font-weight: bold; 
+      color: white;
+      text-shadow: 0 0 12px #20c997, 0 0 24px #17a589, 0 0 48px #20c997;
+    }
+
     .movie-container { padding: 20px; }
-    video { width: 90%; max-width: 900px; height: auto; border-radius: 10px; margin-top: 20px; }
-    img { width: 200px; border-radius: 8px; margin-top: 10px; }
-    a { color: #e50914; text-decoration: none; display: inline-block; margin-top: 15px; }
+    video { 
+      width: 90%; 
+      max-width: 900px; 
+      height: auto; 
+      border-radius: 10px; 
+      margin-top: 20px; 
+      border: 2px solid #20c997; 
+      box-shadow: 0 0 12px #20c997;
+    }
+    img { 
+      width: 220px; 
+      border-radius: 10px; 
+      margin-top: 10px; 
+      border: 2px solid #20c997; 
+      box-shadow: 0 0 10px #20c997; 
+    }
+
+    /* Movie Title with Glow */
+    h2 {
+      font-size: 28px;
+      margin-top: 15px;
+      color: #20c997;
+      text-shadow: 0 0 12px #20c997, 0 0 24px #17a589, 0 0 48px #20c997;
+    }
+
+    /* Back button */
+    .back-btn {
+      display: inline-block;
+      margin-top: 25px;
+      padding: 12px 22px;
+      background: #20c997;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      text-decoration: none;
+      border-radius: 25px;
+      transition: background 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 0 8px #20c997;
+    }
+    .back-btn:hover {
+      background: #17a589;
+      transform: scale(1.05);
+      box-shadow: 0 0 15px #20c997;
+    }
   </style>
 </head>
 <body>
-  <header>🎬 Movie Player</header>
+  <header>🎬 Now Playing</header>
 
   <div class="movie-container" id="movieContainer"></div>
 
@@ -40,12 +91,11 @@
           Your browser does not support the video tag.
         </video>
         <br>
-        <a href="index.html">⬅ Back to Home</a>
+        <a href="index.html" class="back-btn">⬅ Back to Home</a>
       `;
     } else {
-      container.innerHTML = `<p>Movie not found!</p><a href="index.html">⬅ Back to Home</a>`;
+      container.innerHTML = `<p>Movie not found!</p><a href="index.html" class="back-btn">⬅ Back to Home</a>`;
     }
   </script>
 </body>
 </html>
-
