@@ -13,7 +13,6 @@
       cursor: none;
     }
 
-    /* 🌌 Welcome Screen */
     .welcome-screen {
       position: fixed;
       top: 0; left: 0;
@@ -111,17 +110,28 @@
 
     .movie-container {
       display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
+      overflow-x: auto;
+      white-space: nowrap;
       padding: 20px;
+      gap: 20px;
+      scroll-behavior: smooth;
+    }
+
+    .movie-container::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    .movie-container::-webkit-scrollbar-thumb {
+      background: #20c997;
+      border-radius: 4px;
     }
 
     .movie-card {
-      margin: 15px;
+      flex: 0 0 auto;
+      width: 200px;
       background: #122426;
       border-radius: 10px;
       overflow: hidden;
-      width: 200px;
       cursor: pointer;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
       text-align: center;
@@ -148,7 +158,6 @@
       font-weight: bold;
     }
 
-    /* 💫 Floating Star Cursor */
     .star-cursor {
       position: fixed;
       width: 8px;
@@ -167,7 +176,6 @@
   </style>
 </head>
 <body>
-  <!-- 🌌 Welcome Screen -->
   <div class="welcome-screen">
     <div class="welcome-text">Welcome to Milkyway Cinema</div>
     <div class="spinner"></div>
@@ -182,52 +190,49 @@
   <div class="movie-container" id="movieContainer"></div>
 
   <script>
-    // Convert Google Drive link to preview link
     function convertDriveLink(link) {
       const match = link.match(/\/d\/(.+?)\//);
       return match ? `https://drive.google.com/file/d/${match[1]}/preview` : link;
     }
 
-
-const movies = [
-  {
-    id: 1,
-    title: "Mahavatar Narsimha (2025)",
-    poster: "Posters/Poster1.jpg",
-    video: convertDriveLink("https://drive.google.com/file/d/1nV9TCnYVA4M9JqzxX2mM2sgfQlDV6R2o/view?usp=sharing")
-  },
-  {
-    id: 2,
-    title: "Kudumbasthan (2025)",
-    poster: "Posters/Poster2.jpg",
-    video: convertDriveLink("https://drive.google.com/file/d/1P-UPst7OvSKGkdDTNIAAUpCQsxg71i12/view?usp=sharing")
-  },
-   {
-    id: 3,
-    title: "SIR (2024)",
-    poster: "Posters/Poster3.jpg",
-    video: convertDriveLink("https://drive.google.com/file/d/1XHZh-oNHQriNF0H0M9jfA4XoVZuSEpIE/view?usp=sharing")
-  },
-   {
-    id: 4,
-    title: "3BHK (2025)",
-    poster: "Posters/Poster4.jpg",
-    video: convertDriveLink("https://drive.google.com/file/d/16vrFBJ3UbtT2e4ht-lf2QBpoVGqbF8zX/view?usp=sharing")
-  },
-     {
-    id: 5,
-    title: "Hridayam (2022)",
-    poster: "Posters/Poster5.jpg",
-    video: convertDriveLink("https://drive.google.com/file/d/1hsgEiqLjn_4AfKSYGKUl0Ld10JNn-LvA/view?usp=sharing")
-  },
-       {
-    id: 6,
-    title: "Kingston (2025)",
-    poster: "Posters/Poster6.jpg",
-    video: convertDriveLink("https://drive.google.com/file/d/13yKXv-aVe_UbVpUb1uvOmpFav69ANKob/view?usp=sharing")
-  }
-];
-
+    const movies = [
+      {
+        id: 1,
+        title: "Mahavatar Narsimha (2025)",
+        poster: "Posters/Poster1.jpg",
+        video: convertDriveLink("https://drive.google.com/file/d/1nV9TCnYVA4M9JqzxX2mM2sgfQlDV6R2o/view?usp=sharing")
+      },
+      {
+        id: 2,
+        title: "Kudumbasthan (2025)",
+        poster: "Posters/Poster2.jpg",
+        video: convertDriveLink("https://drive.google.com/file/d/1P-UPst7OvSKGkdDTNIAAUpCQsxg71i12/view?usp=sharing")
+      },
+      {
+        id: 3,
+        title: "SIR (2024)",
+        poster: "Posters/Poster3.jpg",
+        video: convertDriveLink("https://drive.google.com/file/d/1XHZh-oNHQriNF0H0M9jfA4XoVZuSEpIE/view?usp=sharing")
+      },
+      {
+        id: 4,
+        title: "3BHK (2025)",
+        poster: "Posters/Poster4.jpg",
+        video: convertDriveLink("https://drive.google.com/file/d/16vrFBJ3UbtT2e4ht-lf2QBpoVGqbF8zX/view?usp=sharing")
+      },
+      {
+        id: 5,
+        title: "Hridayam (2022)",
+        poster: "Posters/Poster5.jpg",
+        video: convertDriveLink("https://drive.google.com/file/d/1hsgEiqLjn_4AfKSYGKUl0Ld10JNn-LvA/view?usp=sharing")
+      },
+      {
+        id: 6,
+        title: "Kingston (2025)",
+        poster: "Posters/Poster6.jpg",
+        video: convertDriveLink("https://drive.google.com/file/d/13yKXv-aVe_UbVpUb1uvOmpFav69ANKob/view?usp=sharing")
+      }
+    ];
 
     localStorage.setItem("movies", JSON.stringify(movies));
 
@@ -255,19 +260,4 @@ const movies = [
     displayMovies();
 
     searchInput.addEventListener("input", (e) => {
-      displayMovies(e.target.value);
-    });
-
-    // 💫 Floating Star Cursor
-    document.addEventListener("mousemove", (e) => {
-      const star = document.createElement("div");
-      star.className = "star-cursor";
-      star.style.left = `${e.pageX}px`;
-      star.style.top = `${e.pageY}px`;
-      document.body.appendChild(star);
-      setTimeout(() => star.remove(), 600);
-    });
-  </script>
-</body>
-</html>
-
+      display
