@@ -217,6 +217,10 @@
       setTimeout(() => { introSound.pause(); }, 1000);
 
       if (movie) {
+        const isYouTube = movie.id === 5;
+        const videoEmbed = isYouTube
+          ? `<iframe src="https://www.youtube.com/embed/fJftRAwst3w" allow="autoplay; fullscreen" allowfullscreen></iframe>`
+          : `<iframe src="${getPreviewLink(movie.video)}" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
         container.innerHTML = `
           <h2>${movie.title}</h2>
           <img src="${getImageLink(movie.poster)}" alt="${movie.title}">
