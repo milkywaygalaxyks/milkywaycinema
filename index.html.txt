@@ -225,8 +225,8 @@ const movies = [
     title: "Kingston (2025)",
     poster: "Posters/Poster6.jpg",
     video: convertDriveLink("https://drive.google.com/file/d/13yKXv-aVe_UbVpUb1uvOmpFav69ANKob/view?usp=sharing")
-  }
-         {
+  },
+  {
     id: 7,
     title: "Idly Kadai (2025)",
     poster: "Posters/Poster7.jpg",
