@@ -109,6 +109,13 @@
       color: #aaa;
     }
 
+    /* 📺 TV Remote Focus Styles */
+    .search-container input:focus {
+      box-shadow: 0 0 15px #20c997;
+      outline: none;
+      background: #1a3538;
+    }
+
     .movie-container {
       display: flex;
       flex-wrap: wrap;
@@ -126,11 +133,20 @@
       transition: transform 0.3s ease, box-shadow 0.3s ease;
       text-align: center;
       border: 1px solid #20c997;
+      outline: none; /* Removes default browser outline */
     }
 
     .movie-card:hover {
       transform: scale(1.08);
       box-shadow: 0 8px 20px rgba(32,201,151,0.5);
+    }
+
+    /* 📺 TV Remote Focus Styles */
+    .movie-card:focus {
+      transform: scale(1.1);
+      box-shadow: 0 0 25px #20c997;
+      outline: 4px solid white; 
+      z-index: 10;
     }
 
     .movie-card img {
@@ -147,27 +163,9 @@
       color: white;
       font-weight: bold;
     }
-
-    /* 💫 Floating Star Cursor */
-    .star-cursor {
-      position: fixed;
-      width: 8px;
-      height: 8px;
-      background: #20c997;
-      border-radius: 50%;
-      pointer-events: none;
-      box-shadow: 0 0 6px #20c997;
-      animation: sparkle 0.6s ease-out forwards;
-    }
-
-    @keyframes sparkle {
-      0% { transform: scale(1); opacity: 1; }
-      100% { transform: scale(2); opacity: 0; }
-    }
   </style>
 </head>
 <body>
-  <!-- 🌌 Welcome Screen -->
   <div class="welcome-screen">
     <div class="welcome-text">Welcome to Milkyway Cinema</div>
     <div class="spinner"></div>
@@ -176,64 +174,26 @@
   <header>🎬 Milkyway Cinema</header>
 
   <div class="search-container">
-    <input type="text" id="searchInput" placeholder="🔍 Search for a movie...">
+    <input type="text" id="searchInput" placeholder="🔍 Search for a movie..." tabindex="0">
   </div>
 
   <div class="movie-container" id="movieContainer"></div>
 
   <script>
-    // Convert Google Drive link to preview link
     function convertDriveLink(link) {
       const match = link.match(/\/d\/(.+?)\//);
       return match ? `https://drive.google.com/file/d/${match[1]}/preview` : link;
     }
 
-
-const movies = [
-  {
-    id: 1,
-    title: "Mahavatar Narsimha (2025)",
-    poster: "Posters/Poster1.jpg",
-    video: convertDriveLink("https://drive.google.com/file/d/1nV9TCnYVA4M9JqzxX2mM2sgfQlDV6R2o/view?usp=sharing")
-  },
-  {
-    id: 2,
-    title: "Kudumbasthan (2025)",
-    poster: "Posters/Poster2.jpg",
-    video: convertDriveLink("https://drive.google.com/file/d/1P-UPst7OvSKGkdDTNIAAUpCQsxg71i12/view?usp=sharing")
-  },
-   {
-    id: 3,
-    title: "SIR (2024)",
-    poster: "Posters/Poster3.jpg",
-    video: convertDriveLink("https://drive.google.com/file/d/1XHZh-oNHQriNF0H0M9jfA4XoVZuSEpIE/view?usp=sharing")
-  },
-   {
-    id: 4,
-    title: "3BHK (2025)",
-    poster: "Posters/Poster4.jpg",
-    video: convertDriveLink("https://drive.google.com/file/d/16vrFBJ3UbtT2e4ht-lf2QBpoVGqbF8zX/view?usp=sharing")
-  },
-     {
-    id: 5,
-    title: "Hridayam (2022)",
-    poster: "Posters/Poster5.jpg",
-    video: "https://youtu.be/fJftRAwst3w"
-  },
-       {
-    id: 6,
-    title: "Kingston (2025)",
-    poster: "Posters/Poster6.jpg",
-    video: convertDriveLink("https://drive.google.com/file/d/13yKXv-aVe_UbVpUb1uvOmpFav69ANKob/view?usp=sharing")
-  },
-  {
-    id: 7,
-    title: "Idly Kadai (2025)",
-    poster: "Posters/Poster7.jpg",
-    video: convertDriveLink("https://drive.google.com/file/d/1lnpKx3YsEdQV8MfKBjvrrGCKln7U6rFV/view?usp=sharing")
-  }
-];
-
+    const movies = [
+      { id: 1, title: "Mahavatar Narsimha (2025)", poster: "Posters/Poster1.jpg", video: convertDriveLink("https://drive.google.com/file/d/1nV9TCnYVA4M9JqzxX2mM2sgfQlDV6R2o/view?usp=sharing") },
+      { id: 2, title: "Kudumbasthan (2025)", poster: "Posters/Poster2.jpg", video: convertDriveLink("https://drive.google.com/file/d/1P-UPst7OvSKGkdDTNIAAUpCQsxg71i12/view?usp=sharing") },
+      { id: 3, title: "SIR (2024)", poster: "Posters/Poster3.jpg", video: convertDriveLink("https://drive.google.com/file/d/1XHZh-oNHQriNF0H0M9jfA4XoVZuSEpIE/view?usp=sharing") },
+      { id: 4, title: "3BHK (2025)", poster: "Posters/Poster4.jpg", video: convertDriveLink("https://drive.google.com/file/d/16vrFBJ3UbtT2e4ht-lf2QBpoVGqbF8zX/view?usp=sharing") },
+      { id: 5, title: "Hridayam (2022)", poster: "Posters/Poster5.jpg", video: "https://youtu.be/fJftRAwst3w" },
+      { id: 6, title: "Kingston (2025)", poster: "Posters/Poster6.jpg", video: convertDriveLink("https://drive.google.com/file/d/13yKXv-aVe_UbVpUb1uvOmpFav69ANKob/view?usp=sharing") },
+      { id: 7, title: "Idly Kadai (2025)", poster: "Posters/Poster7.jpg", video: convertDriveLink("https://drive.google.com/file/d/1lnpKx3YsEdQV8MfKBjvrrGCKln7U6rFV/view?usp=sharing") }
+    ];
 
     localStorage.setItem("movies", JSON.stringify(movies));
 
@@ -247,13 +207,25 @@ const movies = [
         .forEach(movie => {
           const card = document.createElement("div");
           card.className = "movie-card";
+          card.tabIndex = 0; // 👈 CRITICAL for TV remote selection
+
           card.innerHTML = `
             <img src="${movie.poster}" alt="${movie.title}">
             <h3>${movie.title}</h3>
           `;
+          
+          // Mouse click
           card.onclick = () => {
             window.location.href = `movie.html?id=${movie.id}`;
           };
+          
+          // TV Remote "Enter" button press
+          card.addEventListener("keydown", function(event) {
+            if (event.key === "Enter") {
+              window.location.href = `movie.html?id=${movie.id}`;
+            }
+          });
+
           container.appendChild(card);
         });
     }
@@ -262,16 +234,6 @@ const movies = [
 
     searchInput.addEventListener("input", (e) => {
       displayMovies(e.target.value);
-    });
-
-    // 💫 Floating Star Cursor
-    document.addEventListener("mousemove", (e) => {
-      const star = document.createElement("div");
-      star.className = "star-cursor";
-      star.style.left = `${e.pageX}px`;
-      star.style.top = `${e.pageY}px`;
-      document.body.appendChild(star);
-      setTimeout(() => star.remove(), 600);
     });
   </script>
 </body>
