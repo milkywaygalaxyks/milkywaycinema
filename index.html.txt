@@ -158,7 +158,7 @@
       font-weight: bold;
     }
 
-    /* 🖱️ Virtual TV Cursor */
+    /* 🖱️ Virtual TV Cursor CSS */
     #tv-cursor {
       position: fixed;
       width: 25px;
@@ -169,10 +169,13 @@
       pointer-events: none; /* Crucial: ensures the cursor doesn't block the click! */
       z-index: 10000;
       box-shadow: 0 0 15px #20c997;
+      display: block;
     }
   </style>
 </head>
 <body>
+  <div id="tv-cursor" style="left: 50%; top: 50%;"></div>
+
   <div class="welcome-screen">
     <div class="welcome-text">Welcome to Milkyway Cinema</div>
     <div class="spinner"></div>
@@ -226,7 +229,8 @@
           };
           
           card.addEventListener("keydown", function(event) {
-            if (event.key === "Enter") {
+            // Updated for maximum TV compatibility
+            if (event.keyCode === 13 || event.key === "Enter") {
               window.location.href = `movie.html?id=${movie.id}`;
             }
           });
@@ -241,29 +245,31 @@
       displayMovies(e.target.value);
     });
 
-    // --- 🖱️ VIRTUAL TV MOUSE CURSOR ---
-    const cursor = document.createElement("div");
-    cursor.id = "tv-cursor";
-    document.body.appendChild(cursor);
-
+    // --- 🖱️ VIRTUAL TV MOUSE CURSOR (TV COMPATIBLE VERSION) ---
+    const tvCursor = document.getElementById("tv-cursor");
+    
     let cx = window.innerWidth / 2;
     let cy = window.innerHeight / 2;
-    let cursorSpeed = 15; 
+    let cursorSpeed = 20; // Slightly faster for big screens
     let keysPressed = {};
 
     function updateCursor() {
-      cursor.style.left = cx + "px";
-      cursor.style.top = cy + "px";
+      if (tvCursor) {
+        tvCursor.style.left = cx + "px";
+        tvCursor.style.top = cy + "px";
+      }
     }
     updateCursor();
 
     window.addEventListener("keydown", (e) => {
-      keysPressed[e.key] = true;
+      // We use keyCode here because older Android TVs don't always understand e.key
+      keysPressed[e.keyCode] = true;
 
-      if (e.key === "Enter") {
-        cursor.style.display = 'none';
+      // 13 is the universal TV remote "OK/Enter" button code
+      if (e.keyCode === 13 || e.key === "Enter") {
+        if (tvCursor) tvCursor.style.display = 'none';
         const elementBelow = document.elementFromPoint(cx, cy);
-        cursor.style.display = 'block';
+        if (tvCursor) tvCursor.style.display = 'block';
 
         if (elementBelow) {
           elementBelow.click();
@@ -273,16 +279,17 @@
     });
 
     window.addEventListener("keyup", (e) => {
-      keysPressed[e.key] = false;
+      keysPressed[e.keyCode] = false;
     });
 
     function moveCursorLoop() {
       let moved = false;
 
-      if (keysPressed["ArrowUp"]) { cy -= cursorSpeed; moved = true; }
-      if (keysPressed["ArrowDown"]) { cy += cursorSpeed; moved = true; }
-      if (keysPressed["ArrowLeft"]) { cx -= cursorSpeed; moved = true; }
-      if (keysPressed["ArrowRight"]) { cx += cursorSpeed; moved = true; }
+      // 38=Up, 40=Down, 37=Left, 39=Right
+      if (keysPressed[38] || keysPressed["ArrowUp"]) { cy -= cursorSpeed; moved = true; }
+      if (keysPressed[40] || keysPressed["ArrowDown"]) { cy += cursorSpeed; moved = true; }
+      if (keysPressed[37] || keysPressed["ArrowLeft"]) { cx -= cursorSpeed; moved = true; }
+      if (keysPressed[39] || keysPressed["ArrowRight"]) { cx += cursorSpeed; moved = true; }
 
       if (moved) {
         cx = Math.max(0, Math.min(window.innerWidth - 25, cx));
