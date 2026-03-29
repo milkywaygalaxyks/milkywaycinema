@@ -10,7 +10,8 @@
       font-family: Arial;
       background: #0d1b1e;
       color: white;
-      cursor: none;
+      cursor: none; /* Hides the default mouse */
+      overflow-x: hidden;
     }
 
     /* 🌌 Welcome Screen */
@@ -75,7 +76,7 @@
     }
 
     @keyframes fadeOut {
-      to { opacity: 0; visibility: hidden; }
+      to { opacity: 0; visibility: hidden; display: none; }
     }
 
     header {
@@ -103,16 +104,15 @@
       background: #122426;
       color: white;
       border: 2px solid #20c997;
+      caret-color: transparent; /* Hides the blinking text cursor */
     }
 
     .search-container input::placeholder {
       color: #aaa;
     }
 
-    /* 📺 TV Remote Focus Styles */
     .search-container input:focus {
       box-shadow: 0 0 15px #20c997;
-      outline: none;
       background: #1a3538;
     }
 
@@ -133,19 +133,13 @@
       transition: transform 0.3s ease, box-shadow 0.3s ease;
       text-align: center;
       border: 1px solid #20c997;
-      outline: none; /* Removes default browser outline */
+      outline: none; 
     }
 
-    .movie-card:hover {
+    .movie-card:hover, .movie-card:focus {
       transform: scale(1.08);
-      box-shadow: 0 8px 20px rgba(32,201,151,0.5);
-    }
-
-    /* 📺 TV Remote Focus Styles */
-    .movie-card:focus {
-      transform: scale(1.1);
-      box-shadow: 0 0 25px #20c997;
-      outline: 4px solid white; 
+      box-shadow: 0 8px 25px rgba(32,201,151,0.8);
+      outline: 4px solid white;
       z-index: 10;
     }
 
@@ -162,6 +156,19 @@
       background: #20c997;
       color: white;
       font-weight: bold;
+    }
+
+    /* 🖱️ Virtual TV Cursor */
+    #tv-cursor {
+      position: fixed;
+      width: 25px;
+      height: 25px;
+      background-color: rgba(32, 201, 151, 0.9);
+      border: 3px solid white;
+      border-radius: 50%;
+      pointer-events: none; /* Crucial: ensures the cursor doesn't block the click! */
+      z-index: 10000;
+      box-shadow: 0 0 15px #20c997;
     }
   </style>
 </head>
@@ -207,19 +214,17 @@
         .forEach(movie => {
           const card = document.createElement("div");
           card.className = "movie-card";
-          card.tabIndex = 0; // 👈 CRITICAL for TV remote selection
+          card.tabIndex = 0; 
 
           card.innerHTML = `
             <img src="${movie.poster}" alt="${movie.title}">
             <h3>${movie.title}</h3>
           `;
           
-          // Mouse click
           card.onclick = () => {
             window.location.href = `movie.html?id=${movie.id}`;
           };
           
-          // TV Remote "Enter" button press
           card.addEventListener("keydown", function(event) {
             if (event.key === "Enter") {
               window.location.href = `movie.html?id=${movie.id}`;
@@ -235,6 +240,62 @@
     searchInput.addEventListener("input", (e) => {
       displayMovies(e.target.value);
     });
+
+    // --- 🖱️ VIRTUAL TV MOUSE CURSOR ---
+    const cursor = document.createElement("div");
+    cursor.id = "tv-cursor";
+    document.body.appendChild(cursor);
+
+    let cx = window.innerWidth / 2;
+    let cy = window.innerHeight / 2;
+    let cursorSpeed = 15; 
+    let keysPressed = {};
+
+    function updateCursor() {
+      cursor.style.left = cx + "px";
+      cursor.style.top = cy + "px";
+    }
+    updateCursor();
+
+    window.addEventListener("keydown", (e) => {
+      keysPressed[e.key] = true;
+
+      if (e.key === "Enter") {
+        cursor.style.display = 'none';
+        const elementBelow = document.elementFromPoint(cx, cy);
+        cursor.style.display = 'block';
+
+        if (elementBelow) {
+          elementBelow.click();
+          elementBelow.focus(); 
+        }
+      }
+    });
+
+    window.addEventListener("keyup", (e) => {
+      keysPressed[e.key] = false;
+    });
+
+    function moveCursorLoop() {
+      let moved = false;
+
+      if (keysPressed["ArrowUp"]) { cy -= cursorSpeed; moved = true; }
+      if (keysPressed["ArrowDown"]) { cy += cursorSpeed; moved = true; }
+      if (keysPressed["ArrowLeft"]) { cx -= cursorSpeed; moved = true; }
+      if (keysPressed["ArrowRight"]) { cx += cursorSpeed; moved = true; }
+
+      if (moved) {
+        cx = Math.max(0, Math.min(window.innerWidth - 25, cx));
+        cy = Math.max(0, Math.min(window.innerHeight - 25, cy));
+        
+        if (cy > window.innerHeight - 50) window.scrollBy(0, cursorSpeed);
+        if (cy < 50) window.scrollBy(0, -cursorSpeed);
+
+        updateCursor();
+      }
+      requestAnimationFrame(moveCursorLoop);
+    }
+    moveCursorLoop();
   </script>
 </body>
 </html>
