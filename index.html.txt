@@ -10,11 +10,10 @@
       font-family: Arial;
       background: #0d1b1e;
       color: white;
-      cursor: none; /* Hides the default mouse */
+      cursor: none; 
       overflow-x: hidden;
     }
 
-    /* 🌌 Welcome Screen */
     .welcome-screen {
       position: fixed;
       top: 0; left: 0;
@@ -26,7 +25,7 @@
       align-items: center;
       flex-direction: column;
       animation: fadeOut 2s ease forwards;
-      animation-delay: 3s;
+      animation-delay: 2s; 
       overflow: hidden;
     }
 
@@ -104,16 +103,11 @@
       background: #122426;
       color: white;
       border: 2px solid #20c997;
-      caret-color: transparent; /* Hides the blinking text cursor */
+      caret-color: transparent; 
     }
 
     .search-container input::placeholder {
       color: #aaa;
-    }
-
-    .search-container input:focus {
-      box-shadow: 0 0 15px #20c997;
-      background: #1a3538;
     }
 
     .movie-container {
@@ -139,7 +133,7 @@
     .movie-card:hover, .movie-card:focus {
       transform: scale(1.08);
       box-shadow: 0 8px 25px rgba(32,201,151,0.8);
-      outline: 4px solid white;
+      outline: 5px solid white;
       z-index: 10;
     }
 
@@ -157,24 +151,12 @@
       color: white;
       font-weight: bold;
     }
-
-    /* 🖱️ Virtual TV Cursor CSS */
-    #tv-cursor {
-      position: fixed;
-      width: 25px;
-      height: 25px;
-      background-color: rgba(32, 201, 151, 0.9);
-      border: 3px solid white;
-      border-radius: 50%;
-      pointer-events: none; /* Crucial: ensures the cursor doesn't block the click! */
-      z-index: 10000;
-      box-shadow: 0 0 15px #20c997;
-      display: block;
-    }
   </style>
 </head>
 <body>
-  <div id="tv-cursor" style="left: 50%; top: 50%;"></div>
+  
+  <!-- 🖱️ THE BULLETPROOF TV CURSOR IS RIGHT HERE -->
+  <div id="tv-cursor" style="position: fixed; width: 35px; height: 35px; background-color: #20c997; border: 4px solid white; border-radius: 50%; pointer-events: none; z-index: 10000; box-shadow: 0 0 20px #20c997; display: block; left: 50%; top: 50%;"></div>
 
   <div class="welcome-screen">
     <div class="welcome-text">Welcome to Milkyway Cinema</div>
@@ -191,11 +173,11 @@
 
   <script>
     function convertDriveLink(link) {
-      const match = link.match(/\/d\/(.+?)\//);
-      return match ? `https://drive.google.com/file/d/${match[1]}/preview` : link;
+      var match = link.match(/\/d\/(.+?)\//);
+      return match ? "https://drive.google.com/file/d/" + match[1] + "/preview" : link;
     }
 
-    const movies = [
+    var movies = [
       { id: 1, title: "Mahavatar Narsimha (2025)", poster: "Posters/Poster1.jpg", video: convertDriveLink("https://drive.google.com/file/d/1nV9TCnYVA4M9JqzxX2mM2sgfQlDV6R2o/view?usp=sharing") },
       { id: 2, title: "Kudumbasthan (2025)", poster: "Posters/Poster2.jpg", video: convertDriveLink("https://drive.google.com/file/d/1P-UPst7OvSKGkdDTNIAAUpCQsxg71i12/view?usp=sharing") },
       { id: 3, title: "SIR (2024)", poster: "Posters/Poster3.jpg", video: convertDriveLink("https://drive.google.com/file/d/1XHZh-oNHQriNF0H0M9jfA4XoVZuSEpIE/view?usp=sharing") },
@@ -207,102 +189,110 @@
 
     localStorage.setItem("movies", JSON.stringify(movies));
 
-    const container = document.getElementById("movieContainer");
-    const searchInput = document.getElementById("searchInput");
+    var container = document.getElementById("movieContainer");
+    var searchInput = document.getElementById("searchInput");
 
-    function displayMovies(filter = "") {
+    function displayMovies(filter) {
+      if (!filter) filter = "";
       container.innerHTML = "";
-      movies
-        .filter(movie => movie.title.toLowerCase().includes(filter.toLowerCase()))
-        .forEach(movie => {
-          const card = document.createElement("div");
+      
+      for (var i = 0; i < movies.length; i++) {
+        var movie = movies[i];
+        if (movie.title.toLowerCase().indexOf(filter.toLowerCase()) > -1) {
+          
+          var card = document.createElement("div");
           card.className = "movie-card";
           card.tabIndex = 0; 
-
-          card.innerHTML = `
-            <img src="${movie.poster}" alt="${movie.title}">
-            <h3>${movie.title}</h3>
-          `;
           
-          card.onclick = () => {
-            window.location.href = `movie.html?id=${movie.id}`;
-          };
-          
-          card.addEventListener("keydown", function(event) {
-            // Updated for maximum TV compatibility
-            if (event.keyCode === 13 || event.key === "Enter") {
-              window.location.href = `movie.html?id=${movie.id}`;
-            }
-          });
+          // Use closure to lock in the correct movie ID
+          (function(id) {
+            card.innerHTML = "<img src='" + movie.poster + "' alt='" + movie.title + "'><h3>" + movie.title + "</h3>";
+            
+            card.onclick = function() {
+              window.location.href = "movie.html?id=" + id;
+            };
+            
+            card.addEventListener("keydown", function(event) {
+              var code = event.keyCode || event.which;
+              if (code === 13) {
+                window.location.href = "movie.html?id=" + id;
+              }
+            });
+          })(movie.id);
 
           container.appendChild(card);
-        });
+        }
+      }
     }
 
     displayMovies();
 
-    searchInput.addEventListener("input", (e) => {
+    searchInput.addEventListener("input", function(e) {
       displayMovies(e.target.value);
     });
 
-    // --- 🖱️ VIRTUAL TV MOUSE CURSOR (TV COMPATIBLE VERSION) ---
-    const tvCursor = document.getElementById("tv-cursor");
-    
-    let cx = window.innerWidth / 2;
-    let cy = window.innerHeight / 2;
-    let cursorSpeed = 20; // Slightly faster for big screens
-    let keysPressed = {};
-
-    function updateCursor() {
-      if (tvCursor) {
-        tvCursor.style.left = cx + "px";
-        tvCursor.style.top = cy + "px";
-      }
-    }
-    updateCursor();
-
-    window.addEventListener("keydown", (e) => {
-      // We use keyCode here because older Android TVs don't always understand e.key
-      keysPressed[e.keyCode] = true;
-
-      // 13 is the universal TV remote "OK/Enter" button code
-      if (e.keyCode === 13 || e.key === "Enter") {
-        if (tvCursor) tvCursor.style.display = 'none';
-        const elementBelow = document.elementFromPoint(cx, cy);
-        if (tvCursor) tvCursor.style.display = 'block';
-
-        if (elementBelow) {
-          elementBelow.click();
-          elementBelow.focus(); 
-        }
-      }
-    });
-
-    window.addEventListener("keyup", (e) => {
-      keysPressed[e.keyCode] = false;
-    });
-
-    function moveCursorLoop() {
-      let moved = false;
-
-      // 38=Up, 40=Down, 37=Left, 39=Right
-      if (keysPressed[38] || keysPressed["ArrowUp"]) { cy -= cursorSpeed; moved = true; }
-      if (keysPressed[40] || keysPressed["ArrowDown"]) { cy += cursorSpeed; moved = true; }
-      if (keysPressed[37] || keysPressed["ArrowLeft"]) { cx -= cursorSpeed; moved = true; }
-      if (keysPressed[39] || keysPressed["ArrowRight"]) { cx += cursorSpeed; moved = true; }
-
-      if (moved) {
-        cx = Math.max(0, Math.min(window.innerWidth - 25, cx));
-        cy = Math.max(0, Math.min(window.innerHeight - 25, cy));
+    // --- 🖱️ VIRTUAL TV MOUSE CURSOR LOGIC ---
+    window.onload = function() {
+        var cursor = document.getElementById("tv-cursor");
         
-        if (cy > window.innerHeight - 50) window.scrollBy(0, cursorSpeed);
-        if (cy < 50) window.scrollBy(0, -cursorSpeed);
+        var cx = window.innerWidth / 2;
+        var cy = window.innerHeight / 2;
+        var cursorSpeed = 20; 
+        var keysPressed = {};
 
+        function updateCursor() {
+            cursor.style.left = cx + "px";
+            cursor.style.top = cy + "px";
+        }
         updateCursor();
-      }
-      requestAnimationFrame(moveCursorLoop);
-    }
-    moveCursorLoop();
+
+        window.addEventListener("keydown", function(e) {
+            var code = e.keyCode || e.which;
+            keysPressed[code] = true;
+
+            if (code === 13) { // 13 is OK/Enter
+                cursor.style.display = 'none';
+                var elementBelow = document.elementFromPoint(cx + 17, cy + 17);
+                cursor.style.display = 'block';
+
+                if (elementBelow) {
+                    elementBelow.click();
+                    elementBelow.focus(); 
+                }
+            }
+        });
+
+        window.addEventListener("keyup", function(e) {
+            var code = e.keyCode || e.which;
+            keysPressed[code] = false;
+        });
+
+        function moveCursorLoop() {
+            var moved = false;
+
+            if (keysPressed[38]) { cy -= cursorSpeed; moved = true; } // Up
+            if (keysPressed[40]) { cy += cursorSpeed; moved = true; } // Down
+            if (keysPressed[37]) { cx -= cursorSpeed; moved = true; } // Left
+            if (keysPressed[39]) { cx += cursorSpeed; moved = true; } // Right
+
+            if (moved) {
+                cx = Math.max(0, Math.min(window.innerWidth - 35, cx));
+                cy = Math.max(0, Math.min(window.innerHeight - 35, cy));
+                
+                if (cy > window.innerHeight - 80) window.scrollBy(0, cursorSpeed);
+                if (cy < 80) window.scrollBy(0, -cursorSpeed);
+
+                updateCursor();
+            }
+            
+            if (window.requestAnimationFrame) {
+                requestAnimationFrame(moveCursorLoop);
+            } else {
+                setTimeout(moveCursorLoop, 16);
+            }
+        }
+        moveCursorLoop();
+    };
   </script>
 </body>
 </html>
