@@ -187,6 +187,9 @@
       { id: 7, title: "Idly Kadai (2025)", poster: "Posters/Poster7.jpg", video: convertDriveLink("https://drive.google.com/file/d/1lnpKx3YsEdQV8MfKBjvrrGCKln7U6rFV/view?usp=sharing") }
     ];
 
+  { id: 8, title: "Jailer 2 (2026)", poster: "Posters/Poster8.jpg", video: convertDriveLink("https://drive.google.com/file/d/1b4299ROYe6YZUDHzRZTs3lw-0Pxhbe0E/view?usp=sharing") }
+    ];
+
     localStorage.setItem("movies", JSON.stringify(movies));
 
     var container = document.getElementById("movieContainer");
